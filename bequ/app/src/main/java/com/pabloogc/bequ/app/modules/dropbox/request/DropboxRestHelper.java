@@ -42,7 +42,8 @@ public class DropboxRestHelper {
                 .query("hash", hash)
                 .query("list", list)
                 .query("rev", rev)
-                .query("locale", session.getLocale());
+                .query("locale", session.getLocale())
+                .error(new DropboxErrorHandler());
     }
 
     /**
@@ -63,7 +64,8 @@ public class DropboxRestHelper {
                 .query("query", query)
                 .query("file_limit", fileLimit > 0 ? fileLimit : 1000)
                 .query("include_deleted", includeDeleted)
-                .query("locale", session.getLocale());
+                .query("locale", session.getLocale())
+                .error(new DropboxErrorHandler());
     }
 
     //TODO: Add the all the REST endpoints (not the file ones, they must use another HttpStack)

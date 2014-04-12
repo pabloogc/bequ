@@ -38,7 +38,7 @@ public class GsonRequest<T> extends PlayaRequest<T> {
     }
 
     @Override public VolleyError generateErrorResponse(NetworkResponse response, T data) {
-        return new VolleyError("error parsing data");
+        return new VolleyError(response);
     }
 
     @Override public boolean responseIsOk(NetworkResponse response, T data) {
@@ -51,11 +51,11 @@ public class GsonRequest<T> extends PlayaRequest<T> {
         return super.getBody();
     }
 
-    public void setGson(Gson gson) {
-        this.gson = gson;
-    }
-
     public Gson getGson() {
         return gson;
+    }
+
+    public void setGson(Gson gson) {
+        this.gson = gson;
     }
 }

@@ -24,17 +24,17 @@ public class DropboxSessionHelper {
         preferences = context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE);
     }
 
-    public void saveToken(AndroidAuthSession session) {
+    private void saveToken(AndroidAuthSession session) {
         preferences.edit().putString(TOKEN_KEY, session.getOAuth2AccessToken()).apply();
     }
 
     public boolean restoreSession() {
-        if (!isTokenStored()) return false;
+        if (!isSessionStored()) return false;
         api.getSession().setOAuth2AccessToken(preferences.getString(TOKEN_KEY, null));
         return true;
     }
 
-    private boolean isTokenStored() {
+    private boolean isSessionStored() {
         return preferences.getString(TOKEN_KEY, null) != null;
     }
 

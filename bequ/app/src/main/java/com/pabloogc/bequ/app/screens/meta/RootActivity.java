@@ -43,7 +43,7 @@ public class RootActivity extends BaseActivity {
             gotoLogin();
         else {
             getFragmentManager().beginTransaction()
-                    .add(R.id.fragmentContainer, new HomeFragment())
+                    .replace(R.id.fragmentContainer, new HomeFragment())
                     .commit();
         }
     }
@@ -88,6 +88,7 @@ public class RootActivity extends BaseActivity {
 
     @Subscribe public void onAuthError(DropboxException event) {
         if (event instanceof DropboxUnlinkedException) {
+            sessionHelper.clearSession();
             gotoLogin();
         }
     }

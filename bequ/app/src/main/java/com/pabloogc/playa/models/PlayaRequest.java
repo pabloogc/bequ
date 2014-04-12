@@ -6,10 +6,9 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.pabloogc.playa.toolbox.CacheMaker;
 import com.pabloogc.playa.handlers.ErrorHandler;
 import com.pabloogc.playa.handlers.SuccessHandler;
-
+import com.pabloogc.playa.toolbox.CacheMaker;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -91,12 +90,12 @@ public abstract class PlayaRequest<T> extends Request<T> {
         this.cacheExpireTime = cacheExpireTime;
     }
 
-    @Override protected Map<String, String> getParams() throws AuthFailureError {
-        return params;
-    }
-
     public void setParams(HashMap<String, String> params) {
         this.params = params;
+    }
+
+    @Override protected Map<String, String> getParams() throws AuthFailureError {
+        return params;
     }
 
     @Override protected Response<T> parseNetworkResponse(NetworkResponse response) {
@@ -108,6 +107,11 @@ public abstract class PlayaRequest<T> extends Request<T> {
             return Response.error(generateErrorResponse(response, data));
     }
 
+    @Override protected void deliverResponse(T response) {
+        if (successHandler != null && !isCanceled())
+            successHandler.onResponse(response);
+    }
+
     private void fakeLongRequest() {
         //Just in case someone uses it and forgets
         if (fakeExecutionTime <= 0)
@@ -117,11 +121,6 @@ public abstract class PlayaRequest<T> extends Request<T> {
             Thread.sleep(fakeExecutionTime);
         } catch (InterruptedException e) {
         }
-    }
-
-    @Override protected void deliverResponse(T response) {
-        if (successHandler != null && !isCanceled())
-            successHandler.onResponse(response);
     }
 
     public abstract T getParsedData(NetworkResponse response);
