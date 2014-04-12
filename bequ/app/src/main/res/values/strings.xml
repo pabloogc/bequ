@@ -3,6 +3,9 @@
 
     <string name="app_name">Bequ</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_logout">Cerrar sesión</string>
+    <string name="login">Iniciar sesión con Dropbox</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="auth_failure">Fallo al iniciar sesión</string>
 
 </resources>
