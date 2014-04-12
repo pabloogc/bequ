@@ -54,4 +54,7 @@ dependencies {
     //mirror of oficial google project that is not hosted in maven central
     //https://android.googlesource.com/platform/frameworks/volley/
     compile 'com.mcxiaoke.volley:library:1.0.3'
+
+    compile 'com.android.support:support-v4:19.+'
+
 }
