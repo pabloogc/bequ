@@ -1,5 +1,6 @@
 package com.pabloogc.bequ.app.modules.dropbox.request;
 
+import com.android.volley.NetworkError;
 import com.android.volley.VolleyError;
 import com.dropbox.client2.exception.DropboxServerException;
 import com.dropbox.client2.exception.DropboxUnlinkedException;
@@ -32,7 +33,7 @@ public class DropboxErrorHandler extends ErrorHandler {
                 return new String(error.networkResponse.data);
             }
         } else {
-            return "Unknown error";
+            return "Error: " + error.getMessage();
         }
     }
 }

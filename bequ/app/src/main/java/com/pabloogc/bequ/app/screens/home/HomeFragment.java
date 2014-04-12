@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -48,13 +49,14 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override public void onCreate(Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        doSearch(false);
+        if (data.isEmpty())
+            doSearch(false);
     }
 
     @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -82,45 +84,52 @@ public class HomeFragment extends BaseFragment {
         View root = inflater.inflate(R.layout.home_fragment, container, false);
         ButterKnife.inject(this, root);
         adapter = new BookAdapter();
-        listView.setAdapter(adapter);
         loadingLayout.setOnRetryClickListener(new WLoadingLayout.OnRetryClickListener() {
             @Override public void onRetry(View view) {
                 doSearch(true);
+            }
+        });
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                BookDetailFragment fragment = BookDetailFragment.newInstance(data.get(position));
+                fragment.setTargetFragment(HomeFragment.this, 0);
+                getFragmentManager().beginTransaction()
+                        .setCustomAnimations(
+                                R.animator.slide_in_right, R.animator.slide_out_left,
+                                R.animator.slide_in_left, R.animator.slide_out_right)
+                        .replace(R.id.fragmentContainer, fragment)
+                        .addToBackStack("/")
+                        .commit();
             }
         });
         return root;
     }
 
     public void doSearch(boolean force) {
-        getApiHelper().search("/", ".pdf", 1000, false)
-                .success(new SuccessHandler<List<DropboxAPI.Entry>>() {
-                    @Override public void onSuccess(List<DropboxAPI.Entry> result) {
-                        data = filterBooks(result);
-                        adapter.notifyDataSetChanged();
-                    }
+        if (force || data.isEmpty())
+            getApiHelper().search("/", ".pdf", 0, false)
+                    .success(new SuccessHandler<List<DropboxAPI.Entry>>() {
+                        @Override public void onSuccess(List<DropboxAPI.Entry> result) {
+                            data = filterBooks(result);
+                            adapter.notifyDataSetChanged();
+                        }
 
-                    @Override public String getSuccessMessage(List<DropboxAPI.Entry> response) {
-                        return String.format("Found %d", response.size());
-                    }
-                })
-                .cacheSkip(force)
-                .loading(loadingLayout)
-                .cacheTime(Time.minutes(10))
-                .cacheKey("search/.pdf")
-                .execute();
-
+                        @Override public String getSuccessMessage(List<DropboxAPI.Entry> response) {
+                            return String.format("Found %d", response.size());
+                        }
+                    })
+                    .cacheSkip(force)
+                    .loading(loadingLayout)
+                    .cacheTime(Time.minutes(60))
+                    .cacheKey("search/.pdf")
+                    .execute();
     }
 
-    public void sortByName() {
-        if (data != null) {
-            Collections.sort(data, new Comparator<DropboxAPI.Entry>() {
-                @Override public int compare(DropboxAPI.Entry lhs, DropboxAPI.Entry rhs) {
-                    return lhs.fileName().toLowerCase().compareTo(rhs.fileName().toLowerCase());
-                }
-            });
-            adapter.notifyDataSetChanged();
-        }
-    }
+    ///////////////////////////////
+    //Data/List related
+    ///////////////////////////////
 
     public void sortByDate() {
         if (data != null) {
@@ -134,13 +143,23 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
+    public void sortByName() {
+        if (data != null) {
+            Collections.sort(data, new Comparator<DropboxAPI.Entry>() {
+                @Override public int compare(DropboxAPI.Entry lhs, DropboxAPI.Entry rhs) {
+                    return lhs.fileName().toLowerCase().compareTo(rhs.fileName().toLowerCase());
+                }
+            });
+            adapter.notifyDataSetChanged();
+        }
+    }
+
     protected static class Holder {
         @InjectView(R.id.bookTitle) TextView title;
         @InjectView(R.id.bookImage) ImageView image;
     }
 
     private class BookAdapter extends BaseAdapter {
-
         @Override public int getCount() {
             return data.size();
         }
@@ -157,6 +176,7 @@ public class HomeFragment extends BaseFragment {
             Holder holder;
             if (convertView == null) {
                 convertView = View.inflate(parent.getContext(), R.layout.book_list_item, null);
+                convertView.setDrawingCacheEnabled(true);
                 holder = new Holder();
                 convertView.setTag(holder);
                 ButterKnife.inject(holder, convertView);

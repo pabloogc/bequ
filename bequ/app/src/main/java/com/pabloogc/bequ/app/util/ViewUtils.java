@@ -3,6 +3,8 @@ package com.pabloogc.bequ.app.util;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Build;
 import android.view.View;
 import android.view.animation.Animation;
@@ -93,4 +95,35 @@ public class ViewUtils {
         alphaAnim.setStartDelay(delay);
         alphaAnim.start();
     }
+
+    public static Bitmap createBitmap(View v, int width, int height) {
+        Bitmap b = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        v.layout(0, 0, v.getLayoutParams().width, v.getLayoutParams().height);
+        v.draw(c);
+        return b;
+    }
+
+    private static Animator configureSlideAnimator(Animator animator) {
+        animator.setInterpolator(new DecelerateInterpolator());
+        return animator;
+    }
+
+    public static Animator slideInRight(View target) {
+        return configureSlideAnimator(ObjectAnimator.ofFloat(target, View.TRANSLATION_X, target.getWidth(), 0));
+    }
+
+    public static Animator slideInLeft(View target) {
+        return configureSlideAnimator(ObjectAnimator.ofFloat(target, View.TRANSLATION_X, -target.getWidth(), 0));
+    }
+
+    public static Animator slideOutLeft(View target) {
+        return configureSlideAnimator(ObjectAnimator.ofFloat(target, View.TRANSLATION_X, 0, -target.getWidth()));
+    }
+
+    public static Animator slideOutRight(View target) {
+        return configureSlideAnimator(ObjectAnimator.ofFloat(target, View.TRANSLATION_X, 0, target.getWidth()));
+    }
+
+
 }

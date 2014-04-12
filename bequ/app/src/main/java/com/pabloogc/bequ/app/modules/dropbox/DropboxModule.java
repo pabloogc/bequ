@@ -14,6 +14,7 @@ import com.dropbox.client2.RESTUtility;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.session.AppKeyPair;
 import com.pabloogc.bequ.app.BuildConfig;
+import com.pabloogc.bequ.app.screens.home.BookDetailFragment;
 import com.pabloogc.bequ.app.screens.home.HomeFragment;
 import com.pabloogc.bequ.app.screens.login.LoginActivity;
 import com.pabloogc.bequ.app.screens.meta.RootActivity;
@@ -39,7 +40,8 @@ import dagger.Provides;
         injects = {
                 RootActivity.class,
                 LoginActivity.class,
-                HomeFragment.class
+                HomeFragment.class,
+                BookDetailFragment.class
         }
 )
 public class DropboxModule {

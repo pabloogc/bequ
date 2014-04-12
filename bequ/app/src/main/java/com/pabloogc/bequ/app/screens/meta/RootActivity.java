@@ -39,13 +39,14 @@ public class RootActivity extends BaseActivity {
         getGraph().inject(this);
         ButterKnife.inject(this);
 
-        if (!sessionHelper.restoreSession())
+        if (!sessionHelper.restoreSession()) {
             gotoLogin();
-        else {
+        } else if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .replace(R.id.fragmentContainer, new HomeFragment())
                     .commit();
         }
+
     }
 
     @Override protected void onStart() {
