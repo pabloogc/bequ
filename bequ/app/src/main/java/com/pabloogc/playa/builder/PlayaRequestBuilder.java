@@ -83,8 +83,8 @@ public abstract class PlayaRequestBuilder
         this.requestQueue = requestQueue;
     }
 
-    public BUILDER_TYPE cacheSkip(boolean use) {
-        this.cacheSkip = use;
+    public BUILDER_TYPE cacheSkip(boolean skip) {
+        this.cacheSkip = skip;
         return (BUILDER_TYPE) this;
     }
 
@@ -339,6 +339,7 @@ public abstract class PlayaRequestBuilder
         request.setCacheRefreshTime(refreshTime);
         request.setCacheExpireTime(expireTime);
         request.setCacheSkip(cacheSkip);
+        request.setCacheKey(cacheKey);
         request.setShouldCache(cacheResult);
         request.setRetryPolicy(retryPolicy);
         request.setBody(body);

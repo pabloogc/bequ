@@ -1,7 +1,6 @@
 package com.pabloogc.playa.models;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -90,21 +89,25 @@ public abstract class PlayaRequest<T> extends Request<T> {
         this.cacheExpireTime = cacheExpireTime;
     }
 
-    public void setParams(HashMap<String, String> params) {
-        this.params = params;
-    }
-
     @Override protected Map<String, String> getParams() throws AuthFailureError {
         return params;
+    }
+
+    public void setParams(HashMap<String, String> params) {
+        this.params = params;
     }
 
     @Override protected Response<T> parseNetworkResponse(NetworkResponse response) {
         fakeLongRequest();
         T data = getParsedData(response);
-        if (responseIsOk(response, data))
+        if (responseIsOk(response, data)) {
+            //this is needed to write to the cache, if you still don't want to write any cache
+            //data set shouldCache = false.
+            cacheSkip = false;
             return Response.success(data, CacheMaker.generateCache(response, cacheRefreshTime, cacheExpireTime));
-        else
+        } else {
             return Response.error(generateErrorResponse(response, data));
+        }
     }
 
     @Override protected void deliverResponse(T response) {
@@ -137,16 +140,6 @@ public abstract class PlayaRequest<T> extends Request<T> {
         this.cacheSkip = cacheSkip;
     }
 
-    @Override public Cache.Entry getCacheEntry() {
-        Cache.Entry entry = super.getCacheEntry();
-        //If we are skipping cache manually invalidate the cache times.
-        if (cacheSkip && entry != null) {
-            entry.ttl = 0;
-            entry.softTtl = 0;
-        }
-        return entry;
-    }
-
     @Override public String getBodyContentType() {
         return bodyContentType;
     }
@@ -157,7 +150,9 @@ public abstract class PlayaRequest<T> extends Request<T> {
 
     @Override
     public String getCacheKey() {
-        if (cacheKey != null)
+        if (cacheSkip)
+            return null;
+        else if (cacheKey != null)
             return cacheKey;
         else
             return super.getCacheKey();
@@ -166,4 +161,5 @@ public abstract class PlayaRequest<T> extends Request<T> {
     public void setCacheKey(String cacheKey) {
         this.cacheKey = cacheKey;
     }
+
 }

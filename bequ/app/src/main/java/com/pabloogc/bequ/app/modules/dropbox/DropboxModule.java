@@ -5,6 +5,7 @@ import android.app.Application;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.Volley;
@@ -12,6 +13,7 @@ import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.RESTUtility;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.session.AppKeyPair;
+import com.pabloogc.bequ.app.BuildConfig;
 import com.pabloogc.bequ.app.screens.home.HomeFragment;
 import com.pabloogc.bequ.app.screens.login.LoginActivity;
 import com.pabloogc.bequ.app.screens.meta.RootActivity;
@@ -63,6 +65,7 @@ public class DropboxModule {
     @Provides @Singleton
     public RequestQueue providesRequestQueue(Application context, final DropboxAPI<AndroidAuthSession> api) {
         HttpStack stack = new DropboxHttpStackWrapper(api);
+        VolleyLog.DEBUG = BuildConfig.DEBUG;
         return Volley.newRequestQueue(context, stack);
     }
 

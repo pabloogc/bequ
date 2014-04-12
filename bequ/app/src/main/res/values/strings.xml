@@ -9,5 +9,6 @@
     <string name="auth_failure">Fallo al iniciar sesión</string>
     <string name="sort_by_date">Ordenar por fecha</string>
     <string name="sort_by_name">Ordenar por nombre</string>
+    <string name="refresh">Recargar</string>
 
 </resources>
