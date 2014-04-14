@@ -17,8 +17,6 @@ public class App extends Application {
         super.onCreate();
         applicationGraph = ObjectGraph.create(
                 new ApplicationModule(this));
-
-
     }
 
     public ObjectGraph getApplicationGraph() {

@@ -20,6 +20,10 @@ import icepick.Icicle;
 
 /**
  * Created by Pablo Orgaz - 4/12/14 - pabloogc@gmail.com - https://github.com/pabloogc
+ * <p/>
+ * Login activity, simply connect with dropbox provided login activity since OAUTH2.0 login
+ * is already implemented there. The login is not launched automatically since launching this app
+ * and immediately see dropbox is confusing.
  */
 public class LoginActivity extends BaseActivity {
 

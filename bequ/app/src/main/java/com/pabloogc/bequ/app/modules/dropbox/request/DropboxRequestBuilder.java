@@ -1,24 +1,23 @@
 package com.pabloogc.bequ.app.modules.dropbox.request;
 
 import com.android.volley.RequestQueue;
-import com.dropbox.client2.android.AndroidAuthSession;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pabloogc.playa.builder.PlayaRequestBuilder;
 
 /**
  * Created by Pablo Orgaz - 4/12/14 - pabloogc@gmail.com - https://github.com/pabloogc
+ * <p/>
+ * This is a clone of {@link com.pabloogc.playa.toolbox.GsonRequestBuilder}, subclass is not an option due to generics.
  */
 public class DropboxRequestBuilder<T> extends PlayaRequestBuilder<DropboxRequestBuilder<T>, DropboxRequest<T>, T, Object> {
 
     private TypeToken<T> token;
     private Class<T> clazz;
     private Gson gson;
-    private AndroidAuthSession session;
 
-    public DropboxRequestBuilder(RequestQueue requestQueue, AndroidAuthSession session) {
+    public DropboxRequestBuilder(RequestQueue requestQueue) {
         super(requestQueue);
-        this.session = session;
     }
 
     @Override public void configure(DropboxRequest<T> request) {
@@ -52,9 +51,5 @@ public class DropboxRequestBuilder<T> extends PlayaRequestBuilder<DropboxRequest
         return this;
     }
 
-    public DropboxRequestBuilder<T> session(AndroidAuthSession session) {
-        this.session = session;
-        return this;
-    }
 
 }

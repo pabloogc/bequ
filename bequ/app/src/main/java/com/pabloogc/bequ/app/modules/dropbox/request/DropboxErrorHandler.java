@@ -1,6 +1,5 @@
 package com.pabloogc.bequ.app.modules.dropbox.request;
 
-import com.android.volley.NetworkError;
 import com.android.volley.VolleyError;
 import com.dropbox.client2.exception.DropboxServerException;
 import com.dropbox.client2.exception.DropboxUnlinkedException;
@@ -11,6 +10,9 @@ import com.pabloogc.playa.handlers.ErrorHandler;
 
 /**
  * Created by Pablo Orgaz - 4/12/14 - pabloogc@gmail.com - https://github.com/pabloogc
+ * <p/>
+ * Custom error handler for dropbox requests that will post an {@link com.dropbox.client2.exception.DropboxUnlinkedException}
+ * if auth fails.
  */
 public class DropboxErrorHandler extends ErrorHandler {
 

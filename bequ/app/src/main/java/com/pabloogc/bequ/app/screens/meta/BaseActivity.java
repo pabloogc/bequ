@@ -9,6 +9,8 @@ import dagger.ObjectGraph;
 
 /**
  * Created by Pablo Orgaz - 4/12/14 - pabloogc@gmail.com - https://github.com/pabloogc
+ *
+ * Base class for all activities to avoid rewriting the injection line.
  */
 public abstract class BaseActivity extends Activity {
 

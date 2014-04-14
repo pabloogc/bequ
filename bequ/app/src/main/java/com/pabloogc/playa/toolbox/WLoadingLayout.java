@@ -1,4 +1,4 @@
-package com.pabloogc.bequ.app.widget;
+package com.pabloogc.playa.toolbox;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -17,6 +17,9 @@ import com.pabloogc.playa.handlers.LoadingHandler;
 
 /**
  * Created by pablo on 9/29/13.
+ * <p/>
+ * Custom layout created to work with {@link com.pabloogc.playa.models.PlayaRequest} that automatically
+ * creates a retry button when an error happens and switches between content and loading view automatically.
  */
 public class WLoadingLayout extends RelativeLayout implements LoadingHandler {
 

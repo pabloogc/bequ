@@ -24,6 +24,12 @@ import icepick.Icepick;
 
 /**
  * Created by Pablo Orgaz - 4/12/14 - pabloogc@gmail.com - https://github.com/pabloogc
+ * <p/>
+ * Root activity for the rest of the application, instead of launching new activities fragments
+ * are preferred.
+ * <p/>
+ * It will handle global errors, mainly authentication errors that will cause automatic launch of
+ * login activity terminating this one ({@link com.pabloogc.bequ.app.screens.meta.RootActivity#onAuthError(com.dropbox.client2.exception.DropboxException)}.
  */
 public class RootActivity extends BaseActivity {
 
@@ -46,17 +52,11 @@ public class RootActivity extends BaseActivity {
                     .replace(R.id.fragmentContainer, new HomeFragment())
                     .commit();
         }
-
     }
 
     @Override protected void onStart() {
         super.onStart();
         ApplicationModule.getBus().register(this);
-    }
-
-    @Override protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
     }
 
     @Override protected void onStop() {
@@ -81,12 +81,10 @@ public class RootActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
+    /**
+     * A request has failed with an auth error, since there is no way to recover
+     * relaunch {@link com.pabloogc.bequ.app.screens.login.LoginActivity} and terminate.
+     */
     @Subscribe public void onAuthError(DropboxException event) {
         if (event instanceof DropboxUnlinkedException) {
             sessionHelper.clearSession();
@@ -94,6 +92,9 @@ public class RootActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Clear stored auth data and launch login
+     */
     private void gotoLogin() {
         sessionHelper.clearSession();
         startActivity(new Intent(this, LoginActivity.class));

@@ -15,8 +15,8 @@ import com.android.volley.toolbox.HttpClientStack;
 import com.pabloogc.playa.handlers.ErrorHandler;
 import com.pabloogc.playa.handlers.LoadingHandler;
 import com.pabloogc.playa.handlers.SuccessHandler;
-import com.pabloogc.playa.handlers.impl.FakeErrorHandler;
-import com.pabloogc.playa.handlers.impl.FakeSuccessHandler;
+import com.pabloogc.playa.handlers.impl.NoErrorHandler;
+import com.pabloogc.playa.handlers.impl.NoSuccessHandler;
 import com.pabloogc.playa.models.PlayaRequest;
 
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -68,8 +68,8 @@ public abstract class PlayaRequestBuilder
     protected long refreshTime = 0L;
     protected String cacheKey;
     //Handlers
-    protected ErrorHandler errorHandler = new FakeErrorHandler();
-    protected SuccessHandler<SUCCESS_DATA_TYPE> successHandler = new FakeSuccessHandler<SUCCESS_DATA_TYPE>();
+    protected ErrorHandler errorHandler = new NoErrorHandler();
+    protected SuccessHandler<SUCCESS_DATA_TYPE> successHandler = new NoSuccessHandler<SUCCESS_DATA_TYPE>();
     protected LoadingHandler loadingHandler;
     //Meta
     protected RequestQueue requestQueue;

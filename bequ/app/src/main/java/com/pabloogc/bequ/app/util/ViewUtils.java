@@ -15,6 +15,8 @@ import android.widget.ScrollView;
 
 /**
  * Created by Pablo Orgaz - 3/9/14 - pabloogc@gmail.com - https://github.com/pabloogc
+ * <p/>
+ * Some animation and view utilities
  */
 public class ViewUtils {
 

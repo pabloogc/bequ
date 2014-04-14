@@ -13,11 +13,17 @@ import dagger.Provides;
 
 /**
  * Created by Pablo Orgaz - 4/12/14 - pabloogc@gmail.com - https://github.com/pabloogc
+ * <p/>
+ * Application wide module, will be loaded if the application is alive, so any object provided by
+ * the modules it includes will always be created correctly.
+ * <p/>
+ * This module is complete, meaning that static analysis will be made for it to make sure all
+ * the dependencies are satisfied.
  */
 @Module(
         library = true,
         includes = {
-                DropboxModule.class,
+                DropboxModule.class
         }
 )
 public class ApplicationModule {
@@ -36,8 +42,8 @@ public class ApplicationModule {
         return bus;
     }
 
-    @Provides
-    @Singleton public Application provideApplication() {
+    @Provides @Singleton
+    public Application provideApplication() {
         return app;
     }
 

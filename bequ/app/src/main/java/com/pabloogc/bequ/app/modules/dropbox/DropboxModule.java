@@ -14,6 +14,7 @@ import com.dropbox.client2.RESTUtility;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.session.AppKeyPair;
 import com.pabloogc.bequ.app.BuildConfig;
+import com.pabloogc.bequ.app.modules.dropbox.request.DropboxRestHelper;
 import com.pabloogc.bequ.app.screens.home.BookDetailFragment;
 import com.pabloogc.bequ.app.screens.home.HomeFragment;
 import com.pabloogc.bequ.app.screens.login.LoginActivity;
@@ -33,6 +34,8 @@ import dagger.Provides;
 
 /**
  * Created by Pablo Orgaz - 4/12/14 - pabloogc@gmail.com - https://github.com/pabloogc
+ *
+ * Dropbox module, provides everything needed to communicate with dropbox API.
  */
 @Module(
         library = true,
@@ -49,8 +52,7 @@ public class DropboxModule {
     private static final String APP_KEY = "6uwjcby9xuaqy4g";
     private static final String APP_SECRET = "rjz8iki7plvvibi";
 
-    @Provides
-    @Singleton
+    @Provides @Singleton
     public DropboxAPI<AndroidAuthSession> provideApiAccess() {
         AppKeyPair pair = new AppKeyPair(APP_KEY, APP_SECRET);
         AndroidAuthSession session = new AndroidAuthSession(pair);
@@ -58,8 +60,7 @@ public class DropboxModule {
         return new DropboxAPI<AndroidAuthSession>(session);
     }
 
-    @Provides
-    @Singleton
+    @Provides @Singleton
     public DropboxSessionHelper provideSessionHelper(Application context, DropboxAPI<AndroidAuthSession> api) {
         return new DropboxSessionHelper(context, api);
     }
@@ -69,6 +70,11 @@ public class DropboxModule {
         HttpStack stack = new DropboxHttpStackWrapper(api);
         VolleyLog.DEBUG = BuildConfig.DEBUG;
         return Volley.newRequestQueue(context, stack);
+    }
+
+    @Provides
+    public DropboxRestHelper providesDropboxRestHelper(RequestQueue queue, DropboxAPI<AndroidAuthSession> api) {
+        return new DropboxRestHelper(queue, api);
     }
 
     /**

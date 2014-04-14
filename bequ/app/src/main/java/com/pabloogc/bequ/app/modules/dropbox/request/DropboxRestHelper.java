@@ -11,6 +11,8 @@ import java.util.List;
 
 /**
  * Created by Pablo Orgaz - 4/12/14 - pabloogc@gmail.com - https://github.com/pabloogc
+ * <p/>
+ * Rest helper for dropbox
  */
 public class DropboxRestHelper {
 
@@ -34,7 +36,7 @@ public class DropboxRestHelper {
         String url_path = "/metadata/" + session.getAccessType() + path;
         String url = RESTUtility.buildURL(session.getAPIServer(), 1, url_path, null);
 
-        return new DropboxRequestBuilder<DropboxAPI.Entry>(queue, api.getSession())
+        return new DropboxRequestBuilder<DropboxAPI.Entry>(queue)
                 .token(DropboxAPI.Entry.class)
                 .method(Request.Method.GET)
                 .url(url)
@@ -56,7 +58,7 @@ public class DropboxRestHelper {
         String url = RESTUtility.buildURL(session.getAPIServer(), 1, url_path, null);
 
 
-        return new DropboxRequestBuilder<List<DropboxAPI.Entry>>(queue, api.getSession())
+        return new DropboxRequestBuilder<List<DropboxAPI.Entry>>(queue)
                 .token(new TypeToken<List<DropboxAPI.Entry>>() {
                 })
                 .method(Request.Method.GET)

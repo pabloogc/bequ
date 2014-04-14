@@ -1,8 +1,10 @@
-package com.pabloogc.bequ.app.util;
+package com.pabloogc.playa.toolbox;
 
 /**
  * Created by Pablo on 10/12/13.
- * welvi-android
+ * <p/>
+ * Utility class used to define time spans in a expressive way, mainly used for
+ * cache time definition
  */
 public class Time {
 

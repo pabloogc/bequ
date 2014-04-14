@@ -17,8 +17,8 @@ import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.RESTUtility;
 import com.pabloogc.bequ.app.R;
 import com.pabloogc.bequ.app.screens.meta.BaseFragment;
-import com.pabloogc.bequ.app.util.Time;
-import com.pabloogc.bequ.app.widget.WLoadingLayout;
+import com.pabloogc.playa.toolbox.Time;
+import com.pabloogc.playa.toolbox.WLoadingLayout;
 import com.pabloogc.playa.handlers.SuccessHandler;
 
 import java.util.ArrayList;
