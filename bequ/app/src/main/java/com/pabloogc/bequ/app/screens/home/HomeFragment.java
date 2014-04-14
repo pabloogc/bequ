@@ -31,6 +31,8 @@ import butterknife.InjectView;
 
 /**
  * Created by Pablo Orgaz - 4/12/14 - pabloogc@gmail.com - https://github.com/pabloogc
+ * <p/>
+ * The fragment displaying a list of books stored in dropbox.
  */
 public class HomeFragment extends BaseFragment {
 
@@ -39,10 +41,19 @@ public class HomeFragment extends BaseFragment {
     protected List<DropboxAPI.Entry> data = new ArrayList<DropboxAPI.Entry>(0);
     protected BookAdapter adapter;
 
-    private static List<DropboxAPI.Entry> filterBooks(List<DropboxAPI.Entry> items) {
+    /**
+     * Remove false search results created by the OS like ._ files since dropbox search matches
+     * using {@link java.lang.String#contains(CharSequence)} and we want files with a specified
+     * extension
+     *
+     * @param items the items to filter
+     * @param ext   the extension required
+     * @return filtered books
+     */
+    private static List<DropboxAPI.Entry> filterBooks(List<DropboxAPI.Entry> items, String ext) {
         List<DropboxAPI.Entry> filter = new ArrayList<DropboxAPI.Entry>();
         for (DropboxAPI.Entry book : items) {
-            if (book.fileName().endsWith(".pdf") && !book.fileName().startsWith("._"))
+            if (book.fileName().endsWith(ext) && !book.fileName().startsWith("._"))
                 filter.add(book);
         }
         return filter;
@@ -55,8 +66,7 @@ public class HomeFragment extends BaseFragment {
 
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (data.isEmpty())
-            doSearch(false);
+        doSearch(false);
     }
 
     @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -83,18 +93,19 @@ public class HomeFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.home_fragment, container, false);
         ButterKnife.inject(this, root);
+
         adapter = new BookAdapter();
         loadingLayout.setOnRetryClickListener(new WLoadingLayout.OnRetryClickListener() {
             @Override public void onRetry(View view) {
                 doSearch(true);
             }
         });
+
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BookDetailFragment fragment = BookDetailFragment.newInstance(data.get(position));
-                fragment.setTargetFragment(HomeFragment.this, 0);
                 getFragmentManager().beginTransaction()
                         .setCustomAnimations(
                                 R.animator.slide_in_right, R.animator.slide_out_left,
@@ -107,22 +118,29 @@ public class HomeFragment extends BaseFragment {
         return root;
     }
 
-    public void doSearch(boolean force) {
+
+    /**
+     * Perform the dropbox query to find epub files
+     *
+     * @param force if it should skip the cached data and go to network. Data is cached for 1 hour.
+     */
+    private void doSearch(boolean force) {
         if (force || data.isEmpty())
+            //Searching pdf instead of epub for testing purposes
             getApiHelper().search("/", ".pdf", 0, false)
                     .success(new SuccessHandler<List<DropboxAPI.Entry>>() {
                         @Override public void onSuccess(List<DropboxAPI.Entry> result) {
-                            data = filterBooks(result);
+                            data = filterBooks(result, ".pdf");
                             adapter.notifyDataSetChanged();
                         }
 
-                        @Override public String getSuccessMessage(List<DropboxAPI.Entry> response) {
-                            return String.format("Found %d", response.size());
+                        @Override public String getSuccessMessage(List<DropboxAPI.Entry> result) {
+                            return String.format("Found %d", result.size());
                         }
                     })
-                    .cacheSkip(force)
                     .loading(loadingLayout)
-                    .cacheTime(Time.minutes(60))
+                    .cacheSkip(force)
+                    .cacheTime(Time.hours(1))
                     .cacheKey("search/.pdf")
                     .execute();
     }
@@ -131,11 +149,14 @@ public class HomeFragment extends BaseFragment {
     //Data/List related
     ///////////////////////////////
 
+    /**
+     * Sort the books by modification date provided by dropbox
+     */
     public void sortByDate() {
         if (data != null) {
             Collections.sort(data, new Comparator<DropboxAPI.Entry>() {
                 @Override public int compare(DropboxAPI.Entry lhs, DropboxAPI.Entry rhs) {
-                    //This is very slow, the parse should be cached
+                    //FIXME: This is very slow, the parse Date should be cached
                     return RESTUtility.parseDate(lhs.modified).compareTo(RESTUtility.parseDate(rhs.modified));
                 }
             });
@@ -143,6 +164,10 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
+    /**
+     * Sort the books by filename. Sorting the books by book name requires downloading the whole file
+     * to read the metadata so it's not a good idea unless explicitly requested by the user.
+     */
     public void sortByName() {
         if (data != null) {
             Collections.sort(data, new Comparator<DropboxAPI.Entry>() {
@@ -154,7 +179,7 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-    protected static class Holder {
+    static class BookHolder {
         @InjectView(R.id.bookTitle) TextView title;
         @InjectView(R.id.bookImage) ImageView image;
     }
@@ -173,17 +198,18 @@ public class HomeFragment extends BaseFragment {
         }
 
         @Override public View getView(int position, View convertView, ViewGroup parent) {
-            Holder holder;
+            BookHolder holder;
             if (convertView == null) {
                 convertView = View.inflate(parent.getContext(), R.layout.book_list_item, null);
                 convertView.setDrawingCacheEnabled(true);
-                holder = new Holder();
+                holder = new BookHolder();
                 convertView.setTag(holder);
                 ButterKnife.inject(holder, convertView);
             } else {
-                holder = (Holder) convertView.getTag();
+                holder = (BookHolder) convertView.getTag();
             }
             holder.title.setText(data.get(position).fileName());
+            //no image, all books have the same since dropbox does not give thumbs
             return convertView;
         }
     }

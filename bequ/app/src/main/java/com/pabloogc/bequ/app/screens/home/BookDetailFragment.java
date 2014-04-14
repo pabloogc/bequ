@@ -1,8 +1,6 @@
 package com.pabloogc.bequ.app.screens.home;
 
-import android.animation.Animator;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +10,16 @@ import com.dropbox.client2.DropboxAPI;
 import com.google.gson.Gson;
 import com.pabloogc.bequ.app.R;
 import com.pabloogc.bequ.app.screens.meta.BaseFragment;
-import com.pabloogc.bequ.app.util.ViewUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 /**
  * Created by Pablo Orgaz - 4/12/14 - pabloogc@gmail.com - https://github.com/pabloogc
+ *
+ * Dummy fragment that only has and image of the book, always the same since dropbox does not
+ * provide thumbs to show (that information is contained inside the epub metadata if any).
+ *
  */
 public class BookDetailFragment extends BaseFragment {
 
@@ -40,7 +41,7 @@ public class BookDetailFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.book_detail_fragment, null);
+        View root = inflater.inflate(R.layout.book_detail_fragment, null, false);
         ButterKnife.inject(this, root);
         //TODO: Actually use the entry data to show de image, that information does not exists in dropbox
         image.setImageResource(R.drawable.ic_book);

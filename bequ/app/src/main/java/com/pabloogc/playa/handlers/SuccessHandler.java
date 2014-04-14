@@ -43,7 +43,7 @@ public abstract class SuccessHandler<T> implements Response.Listener<T> {
             loadingHandler.hideLoading(successMessage, true);
     }
 
-    public String getSuccessMessage(T response) {
+    public String getSuccessMessage(T result) {
         return null;
     }
 

@@ -1,7 +1,7 @@
 package com.pabloogc.bequ.app.util;
 
 /**
- * Created by pablo on 10/12/13.
+ * Created by Pablo on 10/12/13.
  * welvi-android
  */
 public class Time {
