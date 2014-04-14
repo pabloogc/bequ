@@ -33,6 +33,13 @@ La descarga de ficheros requiere comunicación especial que __no se ha implement
 Otro punto importante es la interacción con el usuario dónde hay que tener en cuenta que nunca se debería bloquear toda la interfaz (por ejemplo, utilizando un diålogo de carga que tapa toda la pantalla). En su lugar se utiliza una vista especial WLoadingLayout, W es de welvi :), que se combina con Playa para gestionar automáticamente la aparición/desparación del contenido que se está cargando así como crear un botón para reintentar la petición si falla por algún motivo.
 
 
+Partes ignoradas/modificadas del enunciado
+-------
+1. __Ordenar los archivos por nombre del libro:__ No es posible sin descargar el libro y leer, si existen, sus metadatos. Por el mismo motivo no hay portada de libro, es necesario descargar el fichero.
+2. __Buscar epub:__ En su lugar he buscado archivos pdf (se busca por extensión), no hay epbus en mi cuenta de dropbox pero la funcionalidad es exactamente la misma.
+3. __Incluir un menu desplegable:__ En su lugar he utilizado una solución propia de android, que son botones en la ActionBar. Un menú lateral tampoco es adecuado porque es una herramienta de navegación, no de interacción con la pantalla.
+4. __Doble click para abrir un libro:__: Considero que el doble click no es un comportamiento adecuado para interactuar en android simplemente porque se producen por error frecuentemente al realizar un click normal. Existen alternativas más adecuadas como un long click o un click simple (que es la que se ha utilizado).
+
 
 
 
