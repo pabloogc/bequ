@@ -45,10 +45,12 @@ public abstract class BaseFragment extends Fragment {
 
     @Override public void onDestroy() {
         super.onDestroy();
-        queue.cancelAll(new RequestQueue.RequestFilter() {
-            @Override public boolean apply(Request<?> request) {
-                return true;
-            }
-        });
+        if (queue != null) {
+            queue.cancelAll(new RequestQueue.RequestFilter() {
+                @Override public boolean apply(Request<?> request) {
+                    return true;
+                }
+            });
+        }
     }
 }
